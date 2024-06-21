@@ -7,6 +7,26 @@ namespace SqlConsole;
 internal class Program {
 
     static void Main(string[] args) {
+        TestOrderController();
+    }
+
+    static void TestOrderController() {
+        var connStr = "server=localhost\\sqlexpress;" +
+        "database=SalesDb;" +
+        "trusted_connection=true;" +
+        "trustServerCertificate=true;";
+        Connection connection = new Connection(connStr);
+        connection.Open();
+
+        OrderController ordCtrl = new OrderController(connection);
+        var orders = ordCtrl.GetAll();
+        foreach(var o in orders) {
+            Console.WriteLine(o);
+        }
+        
+        connection.Close();
+    }
+    static void TestCustomerController() { 
 
         var connStr = "server=localhost\\sqlexpress;" +
                 "database=SalesDb;" +
@@ -16,21 +36,44 @@ internal class Program {
         connection.Open();
 
         CustomerController custCtrl = new CustomerController(connection);
-        //var customers = custCtrl.GetAll();
-        //foreach(var c in customers) {
-        //    Console.WriteLine(c.Name);
+
+        //var searchedCustomers = custCtrl.Search("er");
+        //foreach(var c in searchedCustomers) {
+        //    Console.WriteLine($"{c.Id} | {c.Name}");
         //}
+
+
+        // Test the Remove() *********************************/
+        //var removed = custCtrl.Remove(45);
+        //Console.WriteLine($"Did the remove succeed? {removed}");
+
+        /* Test the GetAll() *********************************/
+        var customers = custCtrl.GetAll();
+        foreach(var c in customers) {
+            Console.WriteLine($"{c.Id} | {c.Name}");
+        }
+
+        /* Test the GetByPK(id) ******************************/
         //var id = 15;
         //var customer = custCtrl.GetByPK(id);
         //Console.WriteLine($"Id {id} is {customer!.Name}");
 
-        SqlServerLib.Customer newCustomer = new SqlServerLib.Customer {
-            Id = 0, Name = "ACME MFG", 
-            City = "Cincinnati", State = "OH", 
-            Sales = 1000, Active = true
-        };
-        var added = custCtrl.Create(newCustomer);
-        Console.WriteLine($"Did the create succeed? {added}");
+        /* Test the Create(Customer)**************************/
+        //SqlServerLib.Customer newCustomer = new SqlServerLib.Customer {
+        //    Id = 0, Name = "MAX", 
+        //    City = "Cincinnati", State = "OH", 
+        //    Sales = 1000, Active = true
+        //};
+        //var added = custCtrl.Create(newCustomer);
+        //Console.WriteLine($"Did the create succeed? {added}");
+
+        /* Test the Change(Customer) **************************/
+        //customer!.City = "Lexington";
+        //customer.State = "KY";
+        //var changed = custCtrl.Change(customer);
+        //Console.WriteLine($"Did the change succeed? {changed}");
+        //customer = custCtrl.GetByPK(id);
+        //Console.WriteLine($"Id {id} is {customer!.Name} | {customer.City} | {customer.State}");
 
         connection.Close();
     }
@@ -71,17 +114,6 @@ internal class Program {
         conn.Close();
 
     }
-    /* Customer Controller
-    static void CustomerController() { 
-        var connStr = "server=localhost\\sqlexpress;" +
-                "database=SalesDb;" +
-                "trusted_connection=true;" +
-                "trustServerCertificate=true;";
-        Connection conn = new Connection(connStr);
-        conn.Open();
-        CustomerController custCtrl = new CustomerController(conn);
-        conn.Close();
-    }
-    */
+
 }
 
