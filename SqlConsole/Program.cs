@@ -7,7 +7,8 @@ namespace SqlConsole;
 internal class Program {
 
     static void Main(string[] args) {
-        TestOrderController();
+        //TestOrderController();
+        TestCustomerController();
     }
 
     static void TestOrderController() {
@@ -23,7 +24,28 @@ internal class Program {
         foreach(var o in orders) {
             Console.WriteLine(o);
         }
-        
+        /*
+        var order = ordCtrl.GetByPK(11111);
+        if(order is null) {
+            Console.WriteLine("Order not found.");
+        } else {
+            Console.WriteLine(order);
+
+        }
+        var newOrder = new Order {
+            Id = 0, CustomerId = 1, Date = new DateTime(2024,6,21), Description = "A new order"
+        };
+        var rc = ordCtrl.Create(newOrder);
+        if(rc)
+            Console.WriteLine("Created Successfully!");
+        else
+            Console.WriteLine("Create Failed.");
+
+        var id = 29;
+        var rc = ordCtrl.Remove(id);
+        Console.WriteLine(rc ? "Success!" : "Failed");
+        */
+
         connection.Close();
     }
     static void TestCustomerController() { 
@@ -35,7 +57,7 @@ internal class Program {
         Connection connection = new Connection(connStr);
         connection.Open();
 
-        CustomerController custCtrl = new CustomerController(connection);
+        IController<Customer>? custCtrl = (IController<Customer>?)new CustomerController(connection);
 
         //var searchedCustomers = custCtrl.Search("er");
         //foreach(var c in searchedCustomers) {
@@ -48,7 +70,7 @@ internal class Program {
         //Console.WriteLine($"Did the remove succeed? {removed}");
 
         /* Test the GetAll() *********************************/
-        var customers = custCtrl.GetAll();
+        var customers = custCtrl!.GetAll();
         foreach(var c in customers) {
             Console.WriteLine($"{c.Id} | {c.Name}");
         }

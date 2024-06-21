@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SqlServerLib;
 
-public class CustomerController {
+public class CustomerController : IController<Customer> {
 
     private SqlConnection? _sqlConnection { get; set; } = null;
     private static string SqlGetAll = "SELECT * from Customers;";
